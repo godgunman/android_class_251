@@ -7,9 +7,11 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 public class MainActivity extends ActionBarActivity {
@@ -17,12 +19,14 @@ public class MainActivity extends ActionBarActivity {
     private Button button;
     private EditText editText;
     private CheckBox checkBox;
+    private Spinner spinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        spinner = (Spinner) findViewById(R.id.spinner);
         checkBox = (CheckBox) findViewById(R.id.checkBox);
 
         button = (Button) findViewById(R.id.button);
@@ -48,6 +52,7 @@ public class MainActivity extends ActionBarActivity {
                 return false;
             }
         });
+        initSpinner();
     }
 
     private void send() {
@@ -57,6 +62,16 @@ public class MainActivity extends ActionBarActivity {
         }
         Toast.makeText(this, text, Toast.LENGTH_LONG).show();
         editText.setText("");
+    }
+
+    private void initSpinner() {
+        String[] names = new String[]{"Larry", "Tom",
+                "Alex", "Logan"};
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+                this, android.R.layout.simple_spinner_item, names);
+
+        spinner.setAdapter(adapter);
     }
 
     public void onClick(View view) {
