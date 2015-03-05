@@ -7,6 +7,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 public class MainActivity extends ActionBarActivity {
 
@@ -19,16 +20,20 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
 
         button = (Button) findViewById(R.id.button);
-
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                button.setText("submit");
+                send();
             }
         });
 
         editText = (EditText) findViewById(R.id.editText);
         editText.setHint("type something ...");
+    }
+
+    private void send() {
+        String text = editText.getText().toString();
+        Toast.makeText(this, text, Toast.LENGTH_LONG).show();
     }
 
     @Override
