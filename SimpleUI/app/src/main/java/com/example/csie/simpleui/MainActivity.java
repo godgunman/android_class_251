@@ -2,6 +2,8 @@ package com.example.csie.simpleui;
 
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -29,11 +31,25 @@ public class MainActivity extends ActionBarActivity {
 
         editText = (EditText) findViewById(R.id.editText);
         editText.setHint("type something ...");
+        editText.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode,
+                                 KeyEvent event) {
+//                Log.d("debug", "keyCode:" + keyCode);
+                if (keyCode == KeyEvent.KEYCODE_ENTER &&
+                        event.getAction() == KeyEvent.ACTION_DOWN) {
+                    send();
+                    return true;
+                }
+                return false;
+            }
+        });
     }
 
     private void send() {
         String text = editText.getText().toString();
         Toast.makeText(this, text, Toast.LENGTH_LONG).show();
+        editText.setText("");
     }
 
     @Override
