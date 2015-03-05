@@ -52,8 +52,15 @@ public class MainActivity extends ActionBarActivity {
 
     private void send() {
         String text = editText.getText().toString();
+        if (checkBox.isChecked()) {
+            text = "********";
+        }
         Toast.makeText(this, text, Toast.LENGTH_LONG).show();
         editText.setText("");
+    }
+
+    public void onClick(View view) {
+        send();
     }
 
     @Override
