@@ -5,10 +5,12 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.EditText;
 
 public class MainActivity extends ActionBarActivity {
 
     private Button button;
+    private EditText editText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -17,6 +19,9 @@ public class MainActivity extends ActionBarActivity {
 
         button = (Button) findViewById(R.id.button);
         button.setText("submit");
+
+        editText = (EditText) findViewById(R.id.editText);
+        editText.setHint("type something ...");
     }
 
     @Override
