@@ -9,9 +9,11 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -63,6 +65,30 @@ public class MainActivity extends ActionBarActivity {
                 return false;
             }
         });
+
+        checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView,
+                                         boolean isChecked) {
+                editor.putBoolean("checkBox", isChecked);
+                editor.commit();
+            }
+        });
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent,
+                                       View view, int position, long id) {
+                editor.putInt("spinner", position);
+                editor.commit();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
         initSpinner();
         initValue();
     }
@@ -70,6 +96,12 @@ public class MainActivity extends ActionBarActivity {
     private void initValue() {
         String text = sp.getString("text", "");
         editText.setText(text);
+
+        Boolean isChecked = sp.getBoolean("checkBox", false);
+        checkBox.setChecked(isChecked);
+
+        int position = sp.getInt("spinner", 0);
+        spinner.setSelection(position);
     }
 
     private void send() {
