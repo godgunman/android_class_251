@@ -18,6 +18,10 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
 public class MainActivity extends ActionBarActivity {
 
     private Button button;
@@ -113,6 +117,7 @@ public class MainActivity extends ActionBarActivity {
         text = "to:[" + name + "] " + text;
         Toast.makeText(this, text, Toast.LENGTH_LONG).show();
         editText.setText("");
+        writeFile(text);
     }
 
     private void initSpinner() {
@@ -131,6 +136,20 @@ public class MainActivity extends ActionBarActivity {
         int cnt = Integer.parseInt(text) + 1;
         button.setText(String.valueOf(cnt));
 //        send();
+    }
+
+    private void writeFile(String text) {
+        try {
+            FileOutputStream fos =
+                    openFileOutput("message.txt", Context.MODE_APPEND);
+            fos.write(text.getBytes());
+            fos.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
     @Override
