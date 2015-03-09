@@ -1,5 +1,7 @@
 package com.example.csie.simpleui;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -20,11 +22,16 @@ public class MainActivity extends ActionBarActivity {
     private EditText editText;
     private CheckBox checkBox;
     private Spinner spinner;
+    private SharedPreferences sp;
+    private SharedPreferences.Editor editor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        sp = getSharedPreferences("settings", Context.MODE_PRIVATE);
+        editor = sp.edit();
 
         spinner = (Spinner) findViewById(R.id.spinner);
         checkBox = (CheckBox) findViewById(R.id.checkBox);
@@ -44,6 +51,10 @@ public class MainActivity extends ActionBarActivity {
             public boolean onKey(View v, int keyCode,
                                  KeyEvent event) {
 //                Log.d("debug", "keyCode:" + keyCode);
+                String currentText = editText.getText().toString();
+                editor.putString("text", currentText);
+                editor.commit();
+
                 if (keyCode == KeyEvent.KEYCODE_ENTER &&
                         event.getAction() == KeyEvent.ACTION_DOWN) {
                     send();
@@ -53,13 +64,21 @@ public class MainActivity extends ActionBarActivity {
             }
         });
         initSpinner();
+        initValue();
+    }
+
+    private void initValue() {
+        String text = sp.getString("text", "");
+        editText.setText(text);
     }
 
     private void send() {
         String text = editText.getText().toString();
+        String name = (String) spinner.getSelectedItem();
         if (checkBox.isChecked()) {
             text = "********";
         }
+        text = "to:[" + name + "] " + text;
         Toast.makeText(this, text, Toast.LENGTH_LONG).show();
         editText.setText("");
     }
