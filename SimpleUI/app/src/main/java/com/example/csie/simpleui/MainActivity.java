@@ -16,6 +16,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.FileInputStream;
@@ -28,6 +29,7 @@ public class MainActivity extends ActionBarActivity {
     private Button button;
     private EditText editText;
     private CheckBox checkBox;
+    private TextView textView;
     private Spinner spinner;
     private SharedPreferences sp;
     private SharedPreferences.Editor editor;
@@ -40,6 +42,7 @@ public class MainActivity extends ActionBarActivity {
         sp = getSharedPreferences("settings", Context.MODE_PRIVATE);
         editor = sp.edit();
 
+        textView = (TextView) findViewById(R.id.textView3);
         spinner = (Spinner) findViewById(R.id.spinner);
         checkBox = (CheckBox) findViewById(R.id.checkBox);
 
@@ -119,6 +122,8 @@ public class MainActivity extends ActionBarActivity {
         Toast.makeText(this, text, Toast.LENGTH_LONG).show();
         editText.setText("");
         writeFile(text);
+
+        textView.setText(readFile());
     }
 
     private void initSpinner() {
