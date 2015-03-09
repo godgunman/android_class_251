@@ -18,6 +18,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -149,7 +150,22 @@ public class MainActivity extends ActionBarActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
 
+    private String readFile() {
+        try {
+            FileInputStream fis = openFileInput("message.txt");
+            byte[] buffer = new byte[1024];
+            fis.read(buffer);
+            fis.close();
+            return new String(buffer);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return "";
     }
 
     @Override
