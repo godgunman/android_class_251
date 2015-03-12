@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="stores">
+        <item>南機場(研磨咖啡) 台北市中華路2段313巷2號</item>
+        <item>忠孝SOGO(研磨咖啡)臺北市大安區忠孝東路四段49巷8號</item>
+        <item>衡陽(研磨咖啡)台北市中正區衡陽路85之1號</item>
+        <item>南陽(研磨咖啡)台北市中正區南陽街4號1樓</item>
+        <item>汀洲 台北市中正區羅斯福路四段136巷6號</item>
+        <item>台北錦州(研磨咖啡)台北市錦州街242號</item>
+    </string-array>
+</resources>

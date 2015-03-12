@@ -138,8 +138,8 @@ public class MainActivity extends ActionBarActivity {
     }
 
     private void initSpinner() {
-        String[] names = new String[]{"Larry", "Tom",
-                "Alex", "Logan"};
+        String[] names =
+                getResources().getStringArray(R.array.stores);
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(
                 this, android.R.layout.simple_spinner_item, names);
