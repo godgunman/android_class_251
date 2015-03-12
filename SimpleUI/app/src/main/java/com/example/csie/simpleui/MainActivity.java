@@ -1,6 +1,7 @@
 package com.example.csie.simpleui;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -153,6 +154,10 @@ public class MainActivity extends ActionBarActivity {
         int cnt = Integer.parseInt(text) + 1;
         button.setText(String.valueOf(cnt));
 //        send();
+
+        Intent intent = new Intent();
+        intent.setClass(this, MenuActivity.class);
+        startActivity(intent);
     }
 
     private void writeFile(String text) {
