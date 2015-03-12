@@ -1,9 +1,12 @@
 package com.example.csie.simpleui;
 
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 
 
 public class MenuActivity extends ActionBarActivity {
@@ -14,6 +17,12 @@ public class MenuActivity extends ActionBarActivity {
         setContentView(R.layout.activity_menu);
     }
 
+    public void onClick(View view) {
+        Button button = (Button) view;
+        String text = button.getText().toString();
+        int cnt = Integer.parseInt(text) + 1;
+        button.setText(String.valueOf(cnt));
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

@@ -13,28 +13,42 @@
         android:layout_height="wrap_content">
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="black tea"
-            android:id="@+id/item1" />
+            android:id="@+id/item1"
+            android:layout_weight="5" />
 
         <Button
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="0"
-            android:id="@+id/button1_s" />
+            android:id="@+id/button1_s"
+            android:onClick="onClick"
+            android:layout_weight="4" />
 
         <Button
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="0"
-            android:id="@+id/button1_m" />
+            android:id="@+id/button1_m"
+            android:onClick="onClick"
+            android:layout_weight="4" />
 
         <Button
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="0"
-            android:id="@+id/button1_l" />
+            android:id="@+id/button1_l"
+            android:onClick="onClick"
+            android:layout_weight="4" />
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="R"
+            android:id="@+id/button2"
+            android:layout_weight="3" />
     </LinearLayout>
 
     <LinearLayout
@@ -43,27 +57,41 @@
         android:layout_height="wrap_content">
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="green tea"
-            android:id="@+id/item2" />
+            android:id="@+id/item2"
+            android:layout_weight="5" />
 
         <Button
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="0"
-            android:id="@+id/button2_s" />
+            android:id="@+id/button2_s"
+            android:onClick="onClick"
+            android:layout_weight="4" />
 
         <Button
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="0"
-            android:id="@+id/button2_m" />
+            android:id="@+id/button2_m"
+            android:onClick="onClick"
+            android:layout_weight="4" />
 
         <Button
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="0"
-            android:id="@+id/button3_l" />
+            android:id="@+id/button3_l"
+            android:onClick="onClick"
+            android:layout_weight="4" />
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="R"
+            android:id="@+id/button4"
+            android:layout_weight="3" />
     </LinearLayout>
 </LinearLayout>
