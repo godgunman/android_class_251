@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,8 +30,8 @@ public class MainActivity extends ActionBarActivity {
     private Button button;
     private EditText editText;
     private CheckBox checkBox;
-    private TextView textView;
     private Spinner spinner;
+    private ListView listView;
     private SharedPreferences sp;
     private SharedPreferences.Editor editor;
 
@@ -42,7 +43,7 @@ public class MainActivity extends ActionBarActivity {
         sp = getSharedPreferences("settings", Context.MODE_PRIVATE);
         editor = sp.edit();
 
-        textView = (TextView) findViewById(R.id.textView3);
+        listView = (ListView) findViewById(R.id.listView);
         spinner = (Spinner) findViewById(R.id.spinner);
         checkBox = (CheckBox) findViewById(R.id.checkBox);
 
@@ -99,6 +100,17 @@ public class MainActivity extends ActionBarActivity {
 
         initSpinner();
         initValue();
+        updateHistory();
+    }
+
+    private void updateHistory() {
+        String history = readFile();
+        String[] historyArray = history.split("\n");
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+                this, android.R.layout.simple_list_item_1, historyArray);
+
+        listView.setAdapter(adapter);
     }
 
     private void initValue() {
@@ -122,8 +134,7 @@ public class MainActivity extends ActionBarActivity {
         Toast.makeText(this, text, Toast.LENGTH_LONG).show();
         editText.setText("");
         writeFile(text);
-
-        textView.setText(readFile());
+        updateHistory();
     }
 
     private void initSpinner() {
@@ -146,6 +157,7 @@ public class MainActivity extends ActionBarActivity {
 
     private void writeFile(String text) {
         try {
+            text += "\n";
             FileOutputStream fos =
                     openFileOutput("message.txt", Context.MODE_APPEND);
             fos.write(text.getBytes());
