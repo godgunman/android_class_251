@@ -7,14 +7,22 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 
 public class MenuActivity extends ActionBarActivity {
+
+    private TextView textView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
+
+        textView = (TextView) findViewById(R.id.storeName);
+
+        String storeName = getIntent().getStringExtra("storeName");
+        textView.setText(storeName);
     }
 
     public void onClick(View view) {

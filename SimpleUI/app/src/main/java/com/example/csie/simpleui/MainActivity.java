@@ -149,8 +149,12 @@ public class MainActivity extends ActionBarActivity {
     }
 
     public void onClick(View view) {
+
+        String storeName = (String) spinner.getSelectedItem();
+
         Intent intent = new Intent();
         intent.setClass(this, MenuActivity.class);
+        intent.putExtra("storeName", storeName);
         startActivity(intent);
     }
 
