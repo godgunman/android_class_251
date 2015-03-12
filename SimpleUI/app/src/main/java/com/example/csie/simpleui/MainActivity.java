@@ -149,10 +149,10 @@ public class MainActivity extends ActionBarActivity {
     }
 
     public void onClick(View view) {
-        Button button = (Button) view;
-        String text = button.getText().toString();
-        int cnt = Integer.parseInt(text) + 1;
-        button.setText(String.valueOf(cnt));
+//        Button button = (Button) view;
+//        String text = button.getText().toString();
+//        int cnt = Integer.parseInt(text) + 1;
+//        button.setText(String.valueOf(cnt));
 //        send();
 
         Intent intent = new Intent();
