@@ -3,11 +3,16 @@ package com.example.csie.simpleui;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 
 public class MenuActivity extends ActionBarActivity {
@@ -30,6 +35,45 @@ public class MenuActivity extends ActionBarActivity {
         String text = button.getText().toString();
         int cnt = Integer.parseInt(text) + 1;
         button.setText(String.valueOf(cnt));
+
+        JSONArray array = new JSONArray();
+        JSONObject blackTeaObject = new JSONObject();
+        JSONObject greenTeaObject = new JSONObject();
+
+        String blackTeaL =
+                ((Button)findViewById(R.id.button1_l)).getText().toString();
+        String blackTeaM =
+                ((Button)findViewById(R.id.button1_m)).getText().toString();
+        String blackTeaS =
+                ((Button)findViewById(R.id.button1_s)).getText().toString();
+
+        try {
+            blackTeaObject.put("l", Integer.valueOf(blackTeaL));
+            blackTeaObject.put("m", Integer.valueOf(blackTeaM));
+            blackTeaObject.put("s", Integer.valueOf(blackTeaS));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        String greenTeaL =
+                ((Button)findViewById(R.id.button2_l)).getText().toString();
+        String greenTeaM =
+                ((Button)findViewById(R.id.button2_m)).getText().toString();
+        String greenTeaS =
+                ((Button)findViewById(R.id.button2_s)).getText().toString();
+
+        try {
+            greenTeaObject.put("l", Integer.valueOf(greenTeaL));
+            greenTeaObject.put("m", Integer.valueOf(greenTeaM));
+            greenTeaObject.put("s", Integer.valueOf(greenTeaS));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        array.put(blackTeaObject);
+        array.put(greenTeaObject);
+
+        Log.d("debug", array.toString());
     }
 
     @Override
