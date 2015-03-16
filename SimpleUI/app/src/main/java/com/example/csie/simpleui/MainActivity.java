@@ -22,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.FileInputStream;
@@ -137,7 +138,19 @@ public class MainActivity extends ActionBarActivity {
         text = "to:[" + name + "] " + text + "\nmenu:" + getMenuInfo();
         Toast.makeText(this, text, Toast.LENGTH_LONG).show();
         editText.setText("");
-        writeFile(text);
+
+        try {
+            String status = sp.getString("status", "");
+            JSONObject order = new JSONObject();
+
+            order.put("storeName", name);
+            order.put("note", editText.getText().toString());
+            order.put("menu", new JSONArray(status));
+
+            writeFile(order.toString()+"\n");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         updateHistory();
     }
 
