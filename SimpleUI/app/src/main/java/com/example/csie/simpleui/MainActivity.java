@@ -21,6 +21,9 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -131,11 +134,31 @@ public class MainActivity extends ActionBarActivity {
         if (checkBox.isChecked()) {
             text = "********";
         }
-        text = "to:[" + name + "] " + text;
+        text = "to:[" + name + "] " + text + "\nmenu:" + getMenuInfo();
         Toast.makeText(this, text, Toast.LENGTH_LONG).show();
         editText.setText("");
         writeFile(text);
         updateHistory();
+    }
+
+    private String getMenuInfo() {
+        String status = sp.getString("status", "");
+        try {
+            JSONArray array = new JSONArray(status);
+            String data = "";
+            for (int i = 0; i < array.length(); i++) {
+                JSONObject object = array.getJSONObject(i);
+                String drinkName = object.getString("drinkName");
+                String l = "l:" + object.getString("l") + ".";
+                String m = "m:" + object.getString("m") + ".";
+                String s = "s:" + object.getString("s") + ".";
+                data += drinkName + " " + l + m + s + "\n";
+            }
+            return data;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "";
     }
 
     private void initSpinner() {

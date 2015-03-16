@@ -87,6 +87,7 @@ public class MenuActivity extends ActionBarActivity {
                 ((Button)findViewById(R.id.button1_s)).getText().toString();
 
         try {
+            blackTeaObject.put("drinkName", "BlackTea");
             blackTeaObject.put("l", Integer.valueOf(blackTeaL));
             blackTeaObject.put("m", Integer.valueOf(blackTeaM));
             blackTeaObject.put("s", Integer.valueOf(blackTeaS));
@@ -102,6 +103,7 @@ public class MenuActivity extends ActionBarActivity {
                 ((Button)findViewById(R.id.button2_s)).getText().toString();
 
         try {
+            greenTeaObject.put("greenName", "GreenTea");
             greenTeaObject.put("l", Integer.valueOf(greenTeaL));
             greenTeaObject.put("m", Integer.valueOf(greenTeaM));
             greenTeaObject.put("s", Integer.valueOf(greenTeaS));
