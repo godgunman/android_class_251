@@ -38,6 +38,8 @@ import java.util.Random;
 
 public class MainActivity extends ActionBarActivity {
 
+    private static final int REQUEST_CODE_ORDER_DETAIL = 1;
+
     private Button button;
     private EditText editText;
     private CheckBox checkBox;
@@ -63,7 +65,7 @@ public class MainActivity extends ActionBarActivity {
 
                 Intent intent = new Intent();
                 intent.setClass(MainActivity.this, OrderDetailActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent, REQUEST_CODE_ORDER_DETAIL);
             }
         });
 
@@ -277,6 +279,25 @@ public class MainActivity extends ActionBarActivity {
         }
 
         return "";
+    }
+
+    @Override
+    protected void onActivityResult(
+            int requestCode, int resultCode, Intent data) {
+
+        if (requestCode == REQUEST_CODE_ORDER_DETAIL) {
+            switch (resultCode) {
+                case OrderDetailActivity.RESULT_CODE_CANCEL:
+                    Toast.makeText(this, "Cancel order.",
+                            Toast.LENGTH_SHORT).show();
+                    break;
+
+                case OrderDetailActivity.RESULT_CODE_APPROVE:
+                    Toast.makeText(this, "Approve order.",
+                            Toast.LENGTH_SHORT).show();
+                    break;
+            }
+        }
     }
 
     @Override

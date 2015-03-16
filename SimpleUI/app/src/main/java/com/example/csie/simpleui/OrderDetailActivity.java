@@ -4,9 +4,13 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 
 public class OrderDetailActivity extends ActionBarActivity {
+
+    public static final int RESULT_CODE_CANCEL = 0;
+    public static final int RESULT_CODE_APPROVE = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -14,6 +18,16 @@ public class OrderDetailActivity extends ActionBarActivity {
         setContentView(R.layout.activity_order_detail);
     }
 
+    public void onClick(View view) {
+        int id = view.getId();
+        if (id == R.id.cancel) {
+            setResult(RESULT_CODE_CANCEL);
+            finish();
+        } else if (id == R.id.approve) {
+            setResult(RESULT_CODE_APPROVE);
+            finish();
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
