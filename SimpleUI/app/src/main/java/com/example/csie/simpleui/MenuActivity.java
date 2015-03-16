@@ -1,6 +1,8 @@
 package com.example.csie.simpleui;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -18,16 +20,18 @@ import org.json.JSONObject;
 public class MenuActivity extends ActionBarActivity {
 
     private TextView textView;
-
+    SharedPreferences sp;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
 
+        sp = getSharedPreferences("settings", Context.MODE_PRIVATE);
         textView = (TextView) findViewById(R.id.storeName);
 
         String storeName = getIntent().getStringExtra("storeName");
         textView.setText(storeName);
+        loadStatus();
     }
 
     public void onClick(View view) {
@@ -36,6 +40,41 @@ public class MenuActivity extends ActionBarActivity {
         int cnt = Integer.parseInt(text) + 1;
         button.setText(String.valueOf(cnt));
 
+        storeStatus();
+        loadStatus();
+    }
+
+    private void loadStatus() {
+        String status = sp.getString("status", "");
+        try {
+            JSONArray array = new JSONArray(status);
+            JSONObject blackTeaObject = array.getJSONObject(0);
+            JSONObject greenTeaObject = array.getJSONObject(1);
+
+            int l = blackTeaObject.getInt("l");
+            int m = blackTeaObject.getInt("m");
+            int s = blackTeaObject.getInt("s");
+
+            ((Button)findViewById(R.id.button1_l)).setText(String.valueOf(l));
+            ((Button)findViewById(R.id.button1_m)).setText(String.valueOf(m));
+            ((Button)findViewById(R.id.button1_s)).setText(String.valueOf(s));
+
+            int l2 = greenTeaObject.getInt("l");
+            int m2 = greenTeaObject.getInt("m");
+            int s2 = greenTeaObject.getInt("s");
+
+            ((Button)findViewById(R.id.button2_l)).setText(String.valueOf(l2));
+            ((Button)findViewById(R.id.button2_m)).setText(String.valueOf(m2));
+            ((Button)findViewById(R.id.button2_s)).setText(String.valueOf(s2));
+
+
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void storeStatus() {
         JSONArray array = new JSONArray();
         JSONObject blackTeaObject = new JSONObject();
         JSONObject greenTeaObject = new JSONObject();
@@ -74,6 +113,12 @@ public class MenuActivity extends ActionBarActivity {
         array.put(greenTeaObject);
 
         Log.d("debug", array.toString());
+
+
+        SharedPreferences.Editor editor = sp.edit();
+
+        editor.putString("status", array.toString());
+        editor.commit();
     }
 
     @Override
