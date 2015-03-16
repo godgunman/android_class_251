@@ -55,6 +55,18 @@ public class MainActivity extends ActionBarActivity {
         editor = sp.edit();
 
         listView = (ListView) findViewById(R.id.listView);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(
+                    AdapterView<?> parent, View view,
+                    int position, long id) {
+
+                Intent intent = new Intent();
+                intent.setClass(MainActivity.this, OrderDetailActivity.class);
+                startActivity(intent);
+            }
+        });
+
         spinner = (Spinner) findViewById(R.id.spinner);
         checkBox = (CheckBox) findViewById(R.id.checkBox);
 
