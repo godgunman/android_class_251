@@ -17,6 +17,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.SimpleAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,6 +30,11 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
 
 public class MainActivity extends ActionBarActivity {
 
@@ -112,10 +118,47 @@ public class MainActivity extends ActionBarActivity {
         String history = readFile();
         String[] historyArray = history.split("\n");
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(
-                this, android.R.layout.simple_list_item_1, historyArray);
+        List<Map<String, String>> data =
+                new ArrayList<Map<String, String>>();
+
+        for(int i =0 ; i < historyArray.length; i++) {
+            try {
+                JSONObject object =
+                        new JSONObject(historyArray[i]);
+
+                String storeName = object.getString("storeName");
+                String note = object.getString("note");
+                JSONArray menu = object.getJSONArray("menu");
+
+                Map<String, String> item =
+                        new HashMap<String, String>();
+
+                item.put("storeName", storeName);
+                item.put("note", "Note:" + note);
+                item.put("drinkNumber", "Total:" + getDrinkNumber(menu));
+
+                data.add(item);
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        String[] from =
+                new String[]{"storeName", "note", "drinkNumber"};
+
+        int[] to =
+                new int[]{R.id.storeName, R.id.note, R.id.drinkNumber};
+
+        SimpleAdapter adapter = new SimpleAdapter(this,
+                data, R.layout.listview_item, from , to);
 
         listView.setAdapter(adapter);
+    }
+
+    private int getDrinkNumber(JSONArray menu) {
+        //TODO
+        return Math.abs(new Random().nextInt()%100);
     }
 
     private void initValue() {
@@ -137,7 +180,6 @@ public class MainActivity extends ActionBarActivity {
         }
         text = "to:[" + name + "] " + text + "\nmenu:" + getMenuInfo();
         Toast.makeText(this, text, Toast.LENGTH_LONG).show();
-        editText.setText("");
 
         try {
             String status = sp.getString("status", "");
@@ -152,6 +194,7 @@ public class MainActivity extends ActionBarActivity {
             e.printStackTrace();
         }
         updateHistory();
+        editText.setText("");
     }
 
     private String getMenuInfo() {
