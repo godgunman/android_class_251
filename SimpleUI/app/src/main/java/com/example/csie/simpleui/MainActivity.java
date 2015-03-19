@@ -23,7 +23,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.parse.Parse;
+import com.parse.ParseException;
 import com.parse.ParseObject;
+import com.parse.SaveCallback;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -205,20 +207,20 @@ public class MainActivity extends ActionBarActivity {
         text = "to:[" + name + "] " + text + "\nmenu:" + getMenuInfo();
         Toast.makeText(this, text, Toast.LENGTH_LONG).show();
 
-        ParseObject orderObject = new ParseObject("Order");
-        orderObject.put("storeName", name);
-        orderObject.put("note", editText.getText().toString());
-        orderObject.saveInBackground();
-
         try {
             String status = sp.getString("status", "");
-            JSONObject order = new JSONObject();
 
-            order.put("storeName", name);
-            order.put("note", editText.getText().toString());
-            order.put("menu", new JSONArray(status));
+            ParseObject orderObject = new ParseObject("Order");
+            orderObject.put("storeName", name);
+            orderObject.put("note", editText.getText().toString());
+            orderObject.put("menu", new JSONArray(status));
+            orderObject.saveInBackground(new SaveCallback() {
+                @Override
+                public void done(ParseException e) {
+                    Log.d("debug", "done method called");
+                }
+            });
 
-            writeFile(order.toString()+"\n");
         } catch (JSONException e) {
             e.printStackTrace();
         }
