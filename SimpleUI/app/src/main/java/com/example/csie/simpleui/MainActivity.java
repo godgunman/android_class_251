@@ -47,6 +47,8 @@ public class MainActivity extends ActionBarActivity {
 
     private static final int REQUEST_CODE_ORDER_DETAIL = 1;
 
+    private List<ParseObject> orderList;
+
     private Button button;
     private EditText editText;
     private CheckBox checkBox;
@@ -76,8 +78,10 @@ public class MainActivity extends ActionBarActivity {
             public void onItemClick(
                     AdapterView<?> parent, View view,
                     int position, long id) {
+                ParseObject orderObject = orderList.get(position);
 
                 Intent intent = new Intent();
+                intent.putExtra("objectId", orderObject.getObjectId());
                 intent.setClass(MainActivity.this, OrderDetailActivity.class);
                 startActivityForResult(intent, REQUEST_CODE_ORDER_DETAIL);
             }
@@ -153,6 +157,8 @@ public class MainActivity extends ActionBarActivity {
             @Override
             public void done(List<ParseObject> parseObjects,
                              ParseException e) {
+
+                orderList = parseObjects;
 
                 for(ParseObject object : parseObjects) {
                     Log.d("debug", object.getString("storeName"));
