@@ -63,10 +63,6 @@ public class MainActivity extends ActionBarActivity {
                 "ucTD3rqecD1jHY8NGDHDUhrypkYeiVYxfb7bYjGH",
                 "0FQy4fMeCHavguzxpuLGUqFXW4G2j1D6ruilPInS");
 
-        ParseObject testObject = new ParseObject("TestObject");
-        testObject.put("foo", "bar");
-        testObject.saveInBackground();
-
         sp = getSharedPreferences("settings", Context.MODE_PRIVATE);
         editor = sp.edit();
 
@@ -208,6 +204,11 @@ public class MainActivity extends ActionBarActivity {
         }
         text = "to:[" + name + "] " + text + "\nmenu:" + getMenuInfo();
         Toast.makeText(this, text, Toast.LENGTH_LONG).show();
+
+        ParseObject orderObject = new ParseObject("Order");
+        orderObject.put("storeName", name);
+        orderObject.put("note", editText.getText().toString());
+        orderObject.saveInBackground();
 
         try {
             String status = sp.getString("status", "");
