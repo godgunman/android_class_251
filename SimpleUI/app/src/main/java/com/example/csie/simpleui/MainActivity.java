@@ -22,9 +22,11 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.parse.FindCallback;
 import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.parse.SaveCallback;
 
 import org.json.JSONArray;
@@ -141,34 +143,33 @@ public class MainActivity extends ActionBarActivity {
     }
 
     private void updateHistory() {
-        String history = readFile();
-        String[] historyArray = history.split("\n");
-
-        List<Map<String, String>> data =
+        final List<Map<String, String>> data =
                 new ArrayList<Map<String, String>>();
 
-        for(int i =0 ; i < historyArray.length; i++) {
-            try {
-                JSONObject object =
-                        new JSONObject(historyArray[i]);
+        ParseQuery<ParseObject> query =
+                new ParseQuery<ParseObject>("Order");
 
-                String storeName = object.getString("storeName");
-                String note = object.getString("note");
-                JSONArray menu = object.getJSONArray("menu");
+        query.findInBackground(new FindCallback<ParseObject>() {
+            @Override
+            public void done(List<ParseObject> parseObjects,
+                             ParseException e) {
 
-                Map<String, String> item =
-                        new HashMap<String, String>();
+                for(ParseObject object : parseObjects) {
+                    String storeName = object.getString("storeName");
+                    String note = object.getString("note");
+                    JSONArray menu = object.getJSONArray("menu");
 
-                item.put("storeName", storeName);
-                item.put("note", "Note:" + note);
-                item.put("drinkNumber", "Total:" + getDrinkNumber(menu));
+                    Map<String, String> item =
+                            new HashMap<String, String>();
 
-                data.add(item);
+                    item.put("storeName", storeName);
+                    item.put("note", "Note:" + note);
+                    item.put("drinkNumber", "Total:" + getDrinkNumber(menu));
 
-            } catch (JSONException e) {
-                e.printStackTrace();
+                    data.add(item);
+                }
             }
-        }
+        });
 
         String[] from =
                 new String[]{"storeName", "note", "drinkNumber"};
