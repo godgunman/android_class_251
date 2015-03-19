@@ -155,6 +155,8 @@ public class MainActivity extends ActionBarActivity {
                              ParseException e) {
 
                 for(ParseObject object : parseObjects) {
+                    Log.d("debug", object.getString("storeName"));
+
                     String storeName = object.getString("storeName");
                     String note = object.getString("note");
                     JSONArray menu = object.getJSONArray("menu");
@@ -168,19 +170,22 @@ public class MainActivity extends ActionBarActivity {
 
                     data.add(item);
                 }
+
+                String[] from =
+                        new String[]{"storeName", "note", "drinkNumber"};
+
+                int[] to =
+                        new int[]{R.id.storeName, R.id.note, R.id.drinkNumber};
+
+                SimpleAdapter adapter = new SimpleAdapter(
+                        MainActivity.this,
+                        data, R.layout.listview_item, from , to);
+
+                listView.setAdapter(adapter);
             }
         });
 
-        String[] from =
-                new String[]{"storeName", "note", "drinkNumber"};
 
-        int[] to =
-                new int[]{R.id.storeName, R.id.note, R.id.drinkNumber};
-
-        SimpleAdapter adapter = new SimpleAdapter(this,
-                data, R.layout.listview_item, from , to);
-
-        listView.setAdapter(adapter);
     }
 
     private int getDrinkNumber(JSONArray menu) {
