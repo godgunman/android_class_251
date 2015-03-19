@@ -255,13 +255,29 @@ public class MainActivity extends ActionBarActivity {
     }
 
     private void initSpinner() {
-        String[] names =
-                getResources().getStringArray(R.array.stores);
+//        String[] names =
+//                getResources().getStringArray(R.array.stores);
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(
-                this, android.R.layout.simple_spinner_item, names);
+        ParseQuery<ParseObject> query =
+                new ParseQuery<ParseObject>("StoreInfo");
+        query.findInBackground(new FindCallback<ParseObject>() {
+            @Override
+            public void done(List<ParseObject> parseObjects,
+                             ParseException e) {
+                List<String> names = new ArrayList<>();
+                for(ParseObject object:parseObjects) {
+                    String name = object.getString("name");
+                    String address = object.getString("address");
+                    names.add(name + "," + address);
+                }
+                ArrayAdapter<String> adapter =
+                        new ArrayAdapter<String>(
+                        MainActivity.this,
+                        android.R.layout.simple_spinner_item, names);
 
-        spinner.setAdapter(adapter);
+                spinner.setAdapter(adapter);
+            }
+        });
     }
 
     public void onClick(View view) {
