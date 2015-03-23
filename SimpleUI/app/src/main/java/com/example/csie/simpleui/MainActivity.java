@@ -28,6 +28,7 @@ import android.widget.Toast;
 import com.parse.FindCallback;
 import com.parse.Parse;
 import com.parse.ParseException;
+import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParsePush;
 import com.parse.ParseQuery;
@@ -37,6 +38,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -55,6 +57,7 @@ public class MainActivity extends ActionBarActivity {
     private List<ParseObject> orderList;
     private List<ParseObject> storeInfoList;
 
+    private Bitmap bitmap;
     private Button button;
     private EditText editText;
     private CheckBox checkBox;
@@ -339,6 +342,12 @@ public class MainActivity extends ActionBarActivity {
         return "";
     }
 
+    private byte[] bitmapToBytes(Bitmap bitmap) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+        return baos.toByteArray();
+    }
+
     @Override
     protected void onActivityResult(
             int requestCode, int resultCode, Intent data) {
@@ -357,9 +366,18 @@ public class MainActivity extends ActionBarActivity {
             }
         } else if (requestCode == REQUEST_CODE_TAKE_PHOTO) {
             if (resultCode == RESULT_OK) {
-                Bitmap bitmap = data.getParcelableExtra("data");
+                bitmap = data.getParcelableExtra("data");
                 ImageView imageView = (ImageView) findViewById(R.id.imageView);
                 imageView.setImageBitmap(bitmap);
+
+                final ParseFile file =
+                        new ParseFile("photo.png", bitmapToBytes(bitmap));
+                file.saveInBackground(new SaveCallback() {
+                    @Override
+                    public void done(ParseException e) {
+                        Log.d("parseFile", file.getUrl());
+                    }
+                });
             }
         }
     }
