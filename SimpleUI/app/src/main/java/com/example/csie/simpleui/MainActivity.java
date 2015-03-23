@@ -26,6 +26,7 @@ import com.parse.FindCallback;
 import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseObject;
+import com.parse.ParsePush;
 import com.parse.ParseQuery;
 import com.parse.SaveCallback;
 
@@ -225,6 +226,10 @@ public class MainActivity extends ActionBarActivity {
                     Log.d("debug", "done method called");
                 }
             });
+
+            ParsePush push = new ParsePush();
+            push.setMessage(name);
+            push.sendInBackground();
 
         } catch (JSONException e) {
             e.printStackTrace();
