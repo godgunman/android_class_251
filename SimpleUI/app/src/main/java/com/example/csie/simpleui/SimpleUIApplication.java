@@ -3,6 +3,7 @@ package com.example.csie.simpleui;
 import android.app.Application;
 
 import com.parse.Parse;
+import com.parse.PushService;
 
 /**
  * Created by csie on 2015/3/23.
@@ -19,5 +20,7 @@ public class SimpleUIApplication extends Application{
         Parse.initialize(this,
                 "ucTD3rqecD1jHY8NGDHDUhrypkYeiVYxfb7bYjGH",
                 "0FQy4fMeCHavguzxpuLGUqFXW4G2j1D6ruilPInS");
+        PushService.setDefaultPushCallback(this, MainActivity.class);
+
     }
 }
