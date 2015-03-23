@@ -49,6 +49,7 @@ public class MainActivity extends ActionBarActivity {
     private static final int REQUEST_CODE_ORDER_DETAIL = 1;
 
     private List<ParseObject> orderList;
+    private List<ParseObject> storeInfoList;
 
     private Button button;
     private EditText editText;
@@ -229,6 +230,10 @@ public class MainActivity extends ActionBarActivity {
 
             ParsePush push = new ParsePush();
             push.setMessage(name);
+
+            int selected = spinner.getSelectedItemPosition();
+            String objectId = storeInfoList.get(selected).getObjectId();
+//            push.setChannel("storeName" + objectId);
             push.sendInBackground();
 
         } catch (JSONException e) {
@@ -268,6 +273,9 @@ public class MainActivity extends ActionBarActivity {
             @Override
             public void done(List<ParseObject> parseObjects,
                              ParseException e) {
+
+                storeInfoList = parseObjects;
+
                 List<String> names = new ArrayList<>();
                 for(ParseObject object:parseObjects) {
                     String name = object.getString("name");
