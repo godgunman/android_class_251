@@ -280,6 +280,9 @@ public class MainActivity extends ActionBarActivity {
     }
 
     public void onClick(View view) {
+        Intent broadcastIntent = new Intent();
+        broadcastIntent.setAction("com.example.csie.simpleui.callreceiver");
+        sendBroadcast(broadcastIntent);
 
         String storeName = (String) spinner.getSelectedItem();
 
