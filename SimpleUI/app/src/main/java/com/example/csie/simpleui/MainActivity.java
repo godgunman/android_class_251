@@ -3,6 +3,8 @@ package com.example.csie.simpleui;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.provider.MediaStore;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,6 +18,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Spinner;
@@ -47,6 +50,7 @@ import java.util.Random;
 public class MainActivity extends ActionBarActivity {
 
     private static final int REQUEST_CODE_ORDER_DETAIL = 1;
+    private static final int REQUEST_CODE_TAKE_PHOTO = 2;
 
     private List<ParseObject> orderList;
     private List<ParseObject> storeInfoList;
@@ -351,6 +355,12 @@ public class MainActivity extends ActionBarActivity {
                             Toast.LENGTH_SHORT).show();
                     break;
             }
+        } else if (requestCode == REQUEST_CODE_TAKE_PHOTO) {
+            if (resultCode == RESULT_OK) {
+                Bitmap bitmap = data.getParcelableExtra("data");
+                ImageView imageView = (ImageView) findViewById(R.id.imageView);
+                imageView.setImageBitmap(bitmap);
+            }
         }
     }
 
@@ -371,6 +381,10 @@ public class MainActivity extends ActionBarActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
+        } else if (id == R.id.action_takephoto) {
+            Intent intent = new Intent();
+            intent.setAction(MediaStore.ACTION_IMAGE_CAPTURE);
+            startActivityForResult(intent, REQUEST_CODE_TAKE_PHOTO);
         }
 
         return super.onOptionsItemSelected(item);
