@@ -57,6 +57,7 @@ public class MainActivity extends ActionBarActivity {
     private List<ParseObject> orderList;
     private List<ParseObject> storeInfoList;
 
+    private ParseFile file;
     private Bitmap bitmap;
     private Button button;
     private EditText editText;
@@ -234,6 +235,9 @@ public class MainActivity extends ActionBarActivity {
                     Log.d("debug", "done method called");
                 }
             });
+            if (file != null) {
+                orderObject.put("photo", file);
+            }
 
             ParsePush push = new ParsePush();
             push.setMessage(name);
@@ -370,14 +374,8 @@ public class MainActivity extends ActionBarActivity {
                 ImageView imageView = (ImageView) findViewById(R.id.imageView);
                 imageView.setImageBitmap(bitmap);
 
-                final ParseFile file =
-                        new ParseFile("photo.png", bitmapToBytes(bitmap));
-                file.saveInBackground(new SaveCallback() {
-                    @Override
-                    public void done(ParseException e) {
-                        Log.d("parseFile", file.getUrl());
-                    }
-                });
+                file = new ParseFile("photo.png", bitmapToBytes(bitmap));
+
             }
         }
     }
