@@ -61,6 +61,8 @@ public class MainActivity extends ActionBarActivity {
     private List<ParseObject> orderList;
     private List<ParseObject> storeInfoList;
 
+    private boolean hasPhoto = false;
+
     private ParseFile file;
     private Bitmap bitmap;
     private Button button;
@@ -233,7 +235,9 @@ public class MainActivity extends ActionBarActivity {
             orderObject.put("storeName", name);
             orderObject.put("note", editText.getText().toString());
             orderObject.put("menu", new JSONArray(status));
-            if (file != null) {
+
+            if (hasPhoto) {
+                file = new ParseFile("photo.png", uriToBytes(getOutputUri()));
                 orderObject.put("photo", file);
             }
 
@@ -410,11 +414,13 @@ public class MainActivity extends ActionBarActivity {
             }
         } else if (requestCode == REQUEST_CODE_TAKE_PHOTO) {
             if (resultCode == RESULT_OK) {
+                hasPhoto = true;
+                ImageView imageView = (ImageView) findViewById(R.id.imageView);
+                imageView.setImageURI(getOutputUri());
+
                 /*
                 bitmap = data.getParcelableExtra("data");
-                ImageView imageView = (ImageView) findViewById(R.id.imageView);
                 imageView.setImageBitmap(bitmap);
-
                 file = new ParseFile("photo.png", bitmapToBytes(bitmap));
                 */
             }
