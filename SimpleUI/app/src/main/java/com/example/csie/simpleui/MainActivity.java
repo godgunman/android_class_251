@@ -46,6 +46,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -351,6 +352,27 @@ public class MainActivity extends ActionBarActivity {
         return "";
     }
 
+    private byte[] uriToBytes(Uri uri) {
+        try {
+            InputStream is = getContentResolver().openInputStream(uri);
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+            byte[] buffer = new byte[1024];
+            int len = 0;
+
+            while( (len = is.read(buffer)) != -1) {
+                baos.write(buffer, 0, len);
+            }
+            return baos.toByteArray();
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     private byte[] bitmapToBytes(Bitmap bitmap) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
@@ -366,6 +388,7 @@ public class MainActivity extends ActionBarActivity {
         }
 
         File file = new File(fileDir, "photo.png");
+        Log.d("debug", file.getPath());
         return Uri.fromFile(file);
     }
 
