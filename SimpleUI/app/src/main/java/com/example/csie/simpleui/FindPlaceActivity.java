@@ -1,5 +1,6 @@
 package com.example.csie.simpleui;
 
+import android.os.AsyncTask;
 import android.os.StrictMode;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -17,13 +18,12 @@ public class FindPlaceActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_find_place);
 
-        disableStrictMode();
+//        disableStrictMode();
 
         textView = (TextView) findViewById(R.id.urlResult);
 
         String url = "http://maps.googleapis.com/maps/api/geocode/json?address=1600+Amphitheatre+Parkway,+Mountain+View,+CA&sensor=false";
-        String result = Utils.fetch(url);
-        textView.setText(result);
+        asyncTask.execute(url);
     }
 
     private void disableStrictMode() {
@@ -57,4 +57,19 @@ public class FindPlaceActivity extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    AsyncTask<String, Void, String> asyncTask =
+            new AsyncTask<String, Void, String>() {
+
+        @Override
+        protected String doInBackground(String... params) {
+            String url = params[0];
+            return Utils.fetch(url);
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            textView.setText(result);
+        }
+    };
 }
