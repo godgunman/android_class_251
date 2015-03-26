@@ -1,19 +1,40 @@
 package com.example.csie.simpleui;
 
+import android.os.StrictMode;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 
 public class FindPlaceActivity extends ActionBarActivity {
+
+    private TextView textView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_find_place);
+
+        disableStrictMode();
+
+        textView = (TextView) findViewById(R.id.urlResult);
+
+        String url = "http://maps.googleapis.com/maps/api/geocode/json?address=1600+Amphitheatre+Parkway,+Mountain+View,+CA&sensor=false";
+        String result = Utils.fetch(url);
+        textView.setText(result);
     }
 
+    private void disableStrictMode() {
+        StrictMode.ThreadPolicy.Builder builder =
+                new StrictMode.ThreadPolicy.Builder();
+
+        StrictMode.ThreadPolicy threadPolicy =
+                builder.permitAll().build();
+
+        StrictMode.setThreadPolicy(threadPolicy);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
