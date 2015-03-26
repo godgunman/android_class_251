@@ -229,15 +229,17 @@ public class MainActivity extends ActionBarActivity {
             orderObject.put("storeName", name);
             orderObject.put("note", editText.getText().toString());
             orderObject.put("menu", new JSONArray(status));
+            if (file != null) {
+                orderObject.put("photo", file);
+            }
+
             orderObject.saveInBackground(new SaveCallback() {
                 @Override
                 public void done(ParseException e) {
                     Log.d("debug", "done method called");
                 }
             });
-            if (file != null) {
-                orderObject.put("photo", file);
-            }
+
 
             ParsePush push = new ParsePush();
             push.setMessage(name);
