@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -237,7 +238,7 @@ public class MainActivity extends ActionBarActivity {
             orderObject.put("menu", new JSONArray(status));
 
             if (hasPhoto) {
-                file = new ParseFile("photo.png", uriToBytes(getOutputUri()));
+                file = new ParseFile("photo.png", uriToBytes(Utils.getOutputUri()));
                 orderObject.put("photo", file);
             }
 
@@ -377,24 +378,6 @@ public class MainActivity extends ActionBarActivity {
         return null;
     }
 
-    private byte[] bitmapToBytes(Bitmap bitmap) {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
-        return baos.toByteArray();
-    }
-
-    private Uri getOutputUri() {
-        File fileDir = Environment.
-                getExternalStoragePublicDirectory(
-                        Environment.DIRECTORY_DCIM);
-        if(fileDir.exists() == false) {
-            fileDir.mkdirs();
-        }
-
-        File file = new File(fileDir, "photo.png");
-        Log.d("debug", file.getPath());
-        return Uri.fromFile(file);
-    }
 
     @Override
     protected void onActivityResult(
@@ -416,7 +399,7 @@ public class MainActivity extends ActionBarActivity {
             if (resultCode == RESULT_OK) {
                 hasPhoto = true;
                 ImageView imageView = (ImageView) findViewById(R.id.imageView);
-                imageView.setImageURI(getOutputUri());
+                imageView.setImageURI(Utils.getOutputUri());
 
                 /*
                 bitmap = data.getParcelableExtra("data");
@@ -447,7 +430,7 @@ public class MainActivity extends ActionBarActivity {
         } else if (id == R.id.action_takephoto) {
             Intent intent = new Intent();
             intent.setAction(MediaStore.ACTION_IMAGE_CAPTURE);
-            intent.putExtra(MediaStore.EXTRA_OUTPUT, getOutputUri());
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, Utils.getOutputUri());
             startActivityForResult(intent, REQUEST_CODE_TAKE_PHOTO);
         }
 
