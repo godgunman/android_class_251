@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.net.Uri;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -39,6 +41,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -354,6 +357,18 @@ public class MainActivity extends ActionBarActivity {
         return baos.toByteArray();
     }
 
+    private Uri getOutputUri() {
+        File fileDir = Environment.
+                getExternalStoragePublicDirectory(
+                        Environment.DIRECTORY_DCIM);
+        if(fileDir.exists() == false) {
+            fileDir.mkdirs();
+        }
+
+        File file = new File(fileDir, "photo.png");
+        return Uri.fromFile(file);
+    }
+
     @Override
     protected void onActivityResult(
             int requestCode, int resultCode, Intent data) {
@@ -372,12 +387,13 @@ public class MainActivity extends ActionBarActivity {
             }
         } else if (requestCode == REQUEST_CODE_TAKE_PHOTO) {
             if (resultCode == RESULT_OK) {
+                /*
                 bitmap = data.getParcelableExtra("data");
                 ImageView imageView = (ImageView) findViewById(R.id.imageView);
                 imageView.setImageBitmap(bitmap);
 
                 file = new ParseFile("photo.png", bitmapToBytes(bitmap));
-
+                */
             }
         }
     }
@@ -402,6 +418,7 @@ public class MainActivity extends ActionBarActivity {
         } else if (id == R.id.action_takephoto) {
             Intent intent = new Intent();
             intent.setAction(MediaStore.ACTION_IMAGE_CAPTURE);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, getOutputUri());
             startActivityForResult(intent, REQUEST_CODE_TAKE_PHOTO);
         }
 
