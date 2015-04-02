@@ -6,6 +6,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.webkit.WebView;
 import android.widget.TextView;
 
 import org.json.JSONException;
@@ -18,6 +19,7 @@ import java.net.URLEncoder;
 public class FindPlaceActivity extends ActionBarActivity {
 
     private TextView textView;
+    private WebView webView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +29,7 @@ public class FindPlaceActivity extends ActionBarActivity {
 //        disableStrictMode();
 
         textView = (TextView) findViewById(R.id.urlResult);
+        webView = (WebView) findViewById(R.id.webView);
 
         String address = "台北市中華路2段313巷2號";
         try {
@@ -73,6 +76,15 @@ public class FindPlaceActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    private String getMapsImageUrl(
+            String lat, String lng, String zoom) {
+
+        String url = String.format(
+                "http://maps.googleapis.com/maps/api/staticmap" +
+                "?center=%s,%s&zoom=%s&size=500x500&sensor=false", lat, lng, zoom);
+        return url;
+    }
+
     AsyncTask<String, Void, String> asyncTask =
             new AsyncTask<String, Void, String>() {
 
@@ -104,6 +116,9 @@ public class FindPlaceActivity extends ActionBarActivity {
                                   .getDouble("lng");
                 textView.setText(formattedAddress+","+lat+","+lng);
 
+                String imageUrl = getMapsImageUrl(
+                        String.valueOf(lat),
+                        String.valueOf(lng), "15");
 
             } catch (JSONException e) {
                 e.printStackTrace();
