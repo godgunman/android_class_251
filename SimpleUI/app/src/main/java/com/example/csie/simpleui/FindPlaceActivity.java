@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 import android.os.StrictMode;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.webkit.WebView;
@@ -80,8 +81,17 @@ public class FindPlaceActivity extends ActionBarActivity {
             String lat, String lng, String zoom) {
 
         String url = String.format(
-                "http://maps.googleapis.com/maps/api/staticmap" +
-                "?center=%s,%s&zoom=%s&size=500x500&sensor=false", lat, lng, zoom);
+                "http://maps.googleapis.com/maps/api/staticmap?" +
+                "center=%s,%s&zoom=%s&size=500x500&sensor=false", lat, lng, zoom);
+        return url;
+    }
+
+    private String getMapsUrl(String lat, String lng, String zoom) {
+
+        String url =
+                String.format(
+                        "https://www.google.com.tw/maps/@%s,%s,%s",
+                        lat, lng, zoom);
         return url;
     }
 
@@ -119,6 +129,12 @@ public class FindPlaceActivity extends ActionBarActivity {
                 String imageUrl = getMapsImageUrl(
                         String.valueOf(lat),
                         String.valueOf(lng), "15");
+
+                String mapsUrl = getMapsUrl(
+                        String.valueOf(lat),
+                        String.valueOf(lng), "17z");
+
+                webView.loadUrl(imageUrl);
 
             } catch (JSONException e) {
                 e.printStackTrace();
