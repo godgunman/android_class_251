@@ -8,6 +8,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
 
 public class FindPlaceActivity extends ActionBarActivity {
 
@@ -22,7 +28,16 @@ public class FindPlaceActivity extends ActionBarActivity {
 
         textView = (TextView) findViewById(R.id.urlResult);
 
-        String url = "http://maps.googleapis.com/maps/api/geocode/json?address=1600+Amphitheatre+Parkway,+Mountain+View,+CA&sensor=false";
+        String address = "台北市中華路2段313巷2號";
+        try {
+            address = URLEncoder.encode(address, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        String url =
+                "http://maps.googleapis.com/maps/api/geocode/" +
+                "json?sensor=false&address=" + address;
+
         asyncTask.execute(url);
     }
 
@@ -69,7 +84,32 @@ public class FindPlaceActivity extends ActionBarActivity {
 
         @Override
         protected void onPostExecute(String result) {
-            textView.setText(result);
+            try {
+                JSONObject object = new JSONObject(result);
+                object = object.getJSONArray("results")
+                      .getJSONObject(0);
+
+                String formattedAddress =
+                        object.getString("formatted_address");
+
+                JSONObject geometry =
+                        object.getJSONObject("geometry");
+
+                double lat
+                        = geometry.getJSONObject("location")
+                                  .getDouble("lat");
+
+                double lng
+                        = geometry.getJSONObject("location")
+                                  .getDouble("lng");
+                textView.setText(formattedAddress+","+lat+","+lng);
+
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+
         }
     };
 }
