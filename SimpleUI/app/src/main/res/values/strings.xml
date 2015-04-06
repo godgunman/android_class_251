@@ -8,5 +8,6 @@
     <string name="title_activity_order_detail">OrderDetail</string>
     <string name="title_activity_find_place">FindPlaceActivity</string>
     <string name="title_activity_history">HistoryActivity</string>
+    <string name="facebook_app_id">897514740307283</string>
 
 </resources>
