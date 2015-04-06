@@ -69,4 +69,34 @@ public class Utils {
         }
         return null;
     }
+
+    public static void writeExternalFile(Context context, String fileName, String text) {
+        try {
+            text += "\n";
+            FileOutputStream fos =
+                    context.openFileOutput(fileName, Context.MODE_APPEND);
+            fos.write(text.getBytes());
+            fos.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static String readExternalFile(Context context, String fileName) {
+        try {
+            FileInputStream fis = context.openFileInput(fileName);
+            byte[] buffer = new byte[1024];
+            fis.read(buffer);
+            fis.close();
+            return new String(buffer);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return "";
+    }
 }

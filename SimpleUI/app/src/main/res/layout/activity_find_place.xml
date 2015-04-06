@@ -1,29 +1,39 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
+    android:orientation="vertical"
     tools:context="com.example.csie.simpleui.FindPlaceActivity">
 
-    <TextView android:text="@string/hello_world" android:layout_width="wrap_content"
+    <TextView android:text="address" android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/urlResult"/>
+    <Spinner
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/storeListSpinner" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="static google map image, using WebView."/>
 
     <WebView
         android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:id="@+id/webView"/>
+
+    <TextView
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/webView"
-        android:layout_below="@+id/urlResult"
-        android:layout_centerHorizontal="true" />
+        android:text="google map, using MapFragment"/>
 
     <fragment
         android:id="@+id/map"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:name="com.google.android.gms.maps.MapFragment"
-        android:layout_below="@+id/webView"
-        android:layout_centerHorizontal="true"
-        />
+        android:name="com.google.android.gms.maps.MapFragment"/>
 
-</RelativeLayout>
+</LinearLayout>

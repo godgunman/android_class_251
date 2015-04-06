@@ -1,5 +1,7 @@
 package com.example.csie.simpleui;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.StrictMode;
 import android.support.v7.app.ActionBarActivity;
@@ -7,20 +9,36 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.webkit.WebView;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.TextView;
+
+import com.parse.FindCallback;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class FindPlaceActivity extends ActionBarActivity {
 
     private TextView textView;
     private WebView webView;
+    private Spinner spinner;
+    private List<ParseObject> storeInfoList;
+
+    private SharedPreferences sp;
+    private SharedPreferences.Editor editor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +46,25 @@ public class FindPlaceActivity extends ActionBarActivity {
         setContentView(R.layout.activity_find_place);
 
 //        disableStrictMode();
+
+
+        sp = getSharedPreferences("settings", Context.MODE_PRIVATE);
+        editor = sp.edit();
+
+        spinner = (Spinner) findViewById(R.id.storeListSpinner);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent,
+                                       View view, int position, long id) {
+                editor.putInt("spinner", position);
+                editor.commit();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
         textView = (TextView) findViewById(R.id.urlResult);
         webView = (WebView) findViewById(R.id.webView);
@@ -43,6 +80,36 @@ public class FindPlaceActivity extends ActionBarActivity {
                 "json?sensor=false&address=" + address;
 
         asyncTask.execute(url);
+
+        initSpinner();
+    }
+
+
+    private void initSpinner() {
+
+        ParseQuery<ParseObject> query =
+                new ParseQuery<ParseObject>("StoreInfo");
+        query.findInBackground(new FindCallback<ParseObject>() {
+            @Override
+            public void done(List<ParseObject> parseObjects,
+                             ParseException e) {
+
+                storeInfoList = parseObjects;
+
+                List<String> names = new ArrayList<>();
+                for(ParseObject object:parseObjects) {
+                    String name = object.getString("name");
+                    String address = object.getString("address");
+                    names.add(name + "," + address);
+                }
+                ArrayAdapter<String> adapter =
+                        new ArrayAdapter<String>(
+                                FindPlaceActivity.this,
+                                android.R.layout.simple_spinner_item, names);
+
+                spinner.setAdapter(adapter);
+            }
+        });
     }
 
     private void disableStrictMode() {

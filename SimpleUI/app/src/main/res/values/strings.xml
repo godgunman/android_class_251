@@ -7,5 +7,6 @@
     <string name="title_activity_menu">MenuActivity</string>
     <string name="title_activity_order_detail">OrderDetail</string>
     <string name="title_activity_find_place">FindPlaceActivity</string>
+    <string name="title_activity_history">HistoryActivity</string>
 
 </resources>

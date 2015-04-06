@@ -56,21 +56,21 @@ import java.util.Random;
 
 public class MainActivity extends ActionBarActivity {
 
-    private static final int REQUEST_CODE_ORDER_DETAIL = 1;
     private static final int REQUEST_CODE_TAKE_PHOTO = 2;
-
-    private List<ParseObject> orderList;
-    private List<ParseObject> storeInfoList;
+    private static final int REQUEST_CODE_FIND_PLACE = 3;
 
     private boolean hasPhoto = false;
 
     private ParseFile file;
+    private String storeId;
+    private String storeName;
+
+
     private Bitmap bitmap;
     private Button button;
     private EditText editText;
     private CheckBox checkBox;
-    private Spinner spinner;
-    private ListView listView;
+
     private SharedPreferences sp;
     private SharedPreferences.Editor editor;
 
@@ -82,22 +82,6 @@ public class MainActivity extends ActionBarActivity {
         sp = getSharedPreferences("settings", Context.MODE_PRIVATE);
         editor = sp.edit();
 
-        listView = (ListView) findViewById(R.id.listView);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(
-                    AdapterView<?> parent, View view,
-                    int position, long id) {
-                ParseObject orderObject = orderList.get(position);
-
-                Intent intent = new Intent();
-                intent.putExtra("objectId", orderObject.getObjectId());
-                intent.setClass(MainActivity.this, OrderDetailActivity.class);
-                startActivityForResult(intent, REQUEST_CODE_ORDER_DETAIL);
-            }
-        });
-
-        spinner = (Spinner) findViewById(R.id.spinner);
         checkBox = (CheckBox) findViewById(R.id.checkBox);
 
         button = (Button) findViewById(R.id.button);
@@ -137,76 +121,8 @@ public class MainActivity extends ActionBarActivity {
             }
         });
 
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent,
-                                       View view, int position, long id) {
-                editor.putInt("spinner", position);
-                editor.commit();
-            }
 
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
-        initSpinner();
         initValue();
-        updateHistory();
-    }
-
-    private void updateHistory() {
-        final List<Map<String, String>> data =
-                new ArrayList<Map<String, String>>();
-
-        ParseQuery<ParseObject> query =
-                new ParseQuery<ParseObject>("Order");
-
-        query.findInBackground(new FindCallback<ParseObject>() {
-            @Override
-            public void done(List<ParseObject> parseObjects,
-                             ParseException e) {
-
-                orderList = parseObjects;
-
-                for(ParseObject object : parseObjects) {
-                    Log.d("debug", object.getString("storeName"));
-
-                    String storeName = object.getString("storeName");
-                    String note = object.getString("note");
-                    JSONArray menu = object.getJSONArray("menu");
-
-                    Map<String, String> item =
-                            new HashMap<String, String>();
-
-                    item.put("storeName", storeName);
-                    item.put("note", "Note:" + note);
-                    item.put("drinkNumber", "Total:" + getDrinkNumber(menu));
-
-                    data.add(item);
-                }
-
-                String[] from =
-                        new String[]{"storeName", "note", "drinkNumber"};
-
-                int[] to =
-                        new int[]{R.id.storeName, R.id.note, R.id.drinkNumber};
-
-                SimpleAdapter adapter = new SimpleAdapter(
-                        MainActivity.this,
-                        data, R.layout.listview_item, from , to);
-
-                listView.setAdapter(adapter);
-            }
-        });
-
-
-    }
-
-    private int getDrinkNumber(JSONArray menu) {
-        //TODO
-        return Math.abs(new Random().nextInt()%100);
     }
 
     private void initValue() {
@@ -216,24 +132,23 @@ public class MainActivity extends ActionBarActivity {
         Boolean isChecked = sp.getBoolean("checkBox", false);
         checkBox.setChecked(isChecked);
 
-        int position = sp.getInt("spinner", 0);
-        spinner.setSelection(position);
+        storeName = "尚未選擇商店";
     }
 
     private void send() {
         String text = editText.getText().toString();
-        String name = (String) spinner.getSelectedItem();
+
         if (checkBox.isChecked()) {
             text = "********";
         }
-        text = "to:[" + name + "] " + text + "\nmenu:" + getMenuInfo();
+        text = "to:[" + storeName + "] " + text + "\nmenu:" + getMenuInfo();
         Toast.makeText(this, text, Toast.LENGTH_LONG).show();
 
         try {
             String status = sp.getString("status", "");
 
             ParseObject orderObject = new ParseObject("Order");
-            orderObject.put("storeName", name);
+            orderObject.put("storeName", storeName);
             orderObject.put("note", editText.getText().toString());
             orderObject.put("menu", new JSONArray(status));
 
@@ -251,17 +166,16 @@ public class MainActivity extends ActionBarActivity {
 
 
             ParsePush push = new ParsePush();
-            push.setMessage(name);
+            push.setMessage(storeName);
 
-            int selected = spinner.getSelectedItemPosition();
-            String objectId = storeInfoList.get(selected).getObjectId();
+//            if (storeId != null) {
 //            push.setChannel("storeName" + objectId);
+//            }
             push.sendInBackground();
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        updateHistory();
         editText.setText("");
     }
 
@@ -285,41 +199,11 @@ public class MainActivity extends ActionBarActivity {
         return "";
     }
 
-    private void initSpinner() {
-//        String[] names =
-//                getResources().getStringArray(R.array.stores);
 
-        ParseQuery<ParseObject> query =
-                new ParseQuery<ParseObject>("StoreInfo");
-        query.findInBackground(new FindCallback<ParseObject>() {
-            @Override
-            public void done(List<ParseObject> parseObjects,
-                             ParseException e) {
-
-                storeInfoList = parseObjects;
-
-                List<String> names = new ArrayList<>();
-                for(ParseObject object:parseObjects) {
-                    String name = object.getString("name");
-                    String address = object.getString("address");
-                    names.add(name + "," + address);
-                }
-                ArrayAdapter<String> adapter =
-                        new ArrayAdapter<String>(
-                        MainActivity.this,
-                        android.R.layout.simple_spinner_item, names);
-
-                spinner.setAdapter(adapter);
-            }
-        });
-    }
-
-    public void onClick(View view) {
+    public void clickFillMenu(View view) {
         Intent broadcastIntent = new Intent();
         broadcastIntent.setAction("com.example.csie.simpleui.callreceiver");
         sendBroadcast(broadcastIntent);
-
-        String storeName = (String) spinner.getSelectedItem();
 
         Intent intent = new Intent();
         intent.setClass(this, MenuActivity.class);
@@ -327,34 +211,11 @@ public class MainActivity extends ActionBarActivity {
         startActivity(intent);
     }
 
-    private void writeFile(String text) {
-        try {
-            text += "\n";
-            FileOutputStream fos =
-                    openFileOutput("message.txt", Context.MODE_APPEND);
-            fos.write(text.getBytes());
-            fos.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private String readFile() {
-        try {
-            FileInputStream fis = openFileInput("message.txt");
-            byte[] buffer = new byte[1024];
-            fis.read(buffer);
-            fis.close();
-            return new String(buffer);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return "";
+    public void clickFindStore(View view) {
+        Intent intent = new Intent();
+        intent.setClass(this, FindPlaceActivity.class);
+        intent.putExtra("storeName", storeName);
+        startActivityForResult(intent, REQUEST_CODE_FIND_PLACE);
     }
 
     private byte[] uriToBytes(Uri uri) {
@@ -383,19 +244,7 @@ public class MainActivity extends ActionBarActivity {
     protected void onActivityResult(
             int requestCode, int resultCode, Intent data) {
 
-        if (requestCode == REQUEST_CODE_ORDER_DETAIL) {
-            switch (resultCode) {
-                case OrderDetailActivity.RESULT_CODE_CANCEL:
-                    Toast.makeText(this, "Cancel order.",
-                            Toast.LENGTH_SHORT).show();
-                    break;
-
-                case OrderDetailActivity.RESULT_CODE_APPROVE:
-                    Toast.makeText(this, "Approve order.",
-                            Toast.LENGTH_SHORT).show();
-                    break;
-            }
-        } else if (requestCode == REQUEST_CODE_TAKE_PHOTO) {
+        if (requestCode == REQUEST_CODE_TAKE_PHOTO) {
             if (resultCode == RESULT_OK) {
                 hasPhoto = true;
                 ImageView imageView = (ImageView) findViewById(R.id.imageView);
@@ -406,6 +255,12 @@ public class MainActivity extends ActionBarActivity {
                 imageView.setImageBitmap(bitmap);
                 file = new ParseFile("photo.png", bitmapToBytes(bitmap));
                 */
+            }
+        } else if (requestCode == REQUEST_CODE_FIND_PLACE) {
+            if (resultCode == RESULT_OK) {
+                if (data.hasExtra("storeName")) {
+                    storeName = data.getStringExtra("storeName");
+                }
             }
         }
     }
@@ -432,6 +287,10 @@ public class MainActivity extends ActionBarActivity {
             intent.setAction(MediaStore.ACTION_IMAGE_CAPTURE);
             intent.putExtra(MediaStore.EXTRA_OUTPUT, Utils.getOutputUri());
             startActivityForResult(intent, REQUEST_CODE_TAKE_PHOTO);
+        } else if (id == R.id.action_history) {
+            Intent intent = new Intent();
+            intent.setClass(this, HistoryActivity.class);
+            startActivity(intent);
         }
 
         return super.onOptionsItemSelected(item);
