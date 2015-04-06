@@ -71,3 +71,7 @@ $RECYCLE.BIN/
 *.msi
 *.msm
 *.msp
+
+# Android Studio
+.idea/
+*.iml
