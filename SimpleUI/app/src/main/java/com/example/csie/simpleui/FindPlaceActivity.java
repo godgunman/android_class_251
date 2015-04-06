@@ -1,5 +1,6 @@
 package com.example.csie.simpleui;
 
+import android.app.FragmentManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -16,6 +17,12 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -39,6 +46,8 @@ public class FindPlaceActivity extends ActionBarActivity {
 
     private SharedPreferences sp;
     private SharedPreferences.Editor editor;
+    private MapFragment mapFragment;
+    private GoogleMap map;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +78,11 @@ public class FindPlaceActivity extends ActionBarActivity {
         textView = (TextView) findViewById(R.id.urlResult);
         webView = (WebView) findViewById(R.id.webView);
 
+        FragmentManager fragmentManager = getFragmentManager();
+        mapFragment =
+                (MapFragment) fragmentManager.findFragmentById(R.id.map);
+        map = mapFragment.getMap();
+        
         String address = "台北市中華路2段313巷2號";
         try {
             address = URLEncoder.encode(address, "UTF-8");
@@ -165,49 +179,60 @@ public class FindPlaceActivity extends ActionBarActivity {
     AsyncTask<String, Void, String> asyncTask =
             new AsyncTask<String, Void, String>() {
 
-        @Override
-        protected String doInBackground(String... params) {
-            String url = params[0];
-            return Utils.fetch(url);
-        }
+                @Override
+                protected String doInBackground(String... params) {
+                    String url = params[0];
+                    return Utils.fetch(url);
+                }
 
-        @Override
-        protected void onPostExecute(String result) {
-            try {
-                JSONObject object = new JSONObject(result);
-                object = object.getJSONArray("results")
-                      .getJSONObject(0);
+                @Override
+                protected void onPostExecute(String result) {
+                    try {
+                        JSONObject object = new JSONObject(result);
+                        object = object.getJSONArray("results")
+                                .getJSONObject(0);
 
-                String formattedAddress =
-                        object.getString("formatted_address");
+                        String formattedAddress =
+                                object.getString("formatted_address");
 
-                JSONObject geometry =
-                        object.getJSONObject("geometry");
+                        JSONObject geometry =
+                                object.getJSONObject("geometry");
 
-                double lat
-                        = geometry.getJSONObject("location")
-                                  .getDouble("lat");
+                        double lat
+                                = geometry.getJSONObject("location")
+                                .getDouble("lat");
 
-                double lng
-                        = geometry.getJSONObject("location")
-                                  .getDouble("lng");
-                textView.setText(formattedAddress+","+lat+","+lng);
+                        double lng
+                                = geometry.getJSONObject("location")
+                                .getDouble("lng");
+                        textView.setText(formattedAddress + "," + lat + "," + lng);
 
-                String imageUrl = getMapsImageUrl(
-                        String.valueOf(lat),
-                        String.valueOf(lng), "15");
+                        String imageUrl = getMapsImageUrl(
+                                String.valueOf(lat),
+                                String.valueOf(lng), "15");
 
-                String mapsUrl = getMapsUrl(
-                        String.valueOf(lat),
-                        String.valueOf(lng), "17z");
+                        String mapsUrl = getMapsUrl(
+                                String.valueOf(lat),
+                                String.valueOf(lng), "17z");
 
-                webView.loadUrl(imageUrl);
+                        webView.loadUrl(imageUrl);
 
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+                        CameraUpdate cameraUpdate
+                                = CameraUpdateFactory.newLatLngZoom(new LatLng(lat, lng), 15);
 
 
-        }
-    };
+                        MarkerOptions markerOptions = new MarkerOptions()
+                                .position(new LatLng(lat, lng))
+                                .title(formattedAddress);
+
+                        map.addMarker(markerOptions);
+                        map.moveCamera(cameraUpdate);
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+
+                }
+            };
 }
