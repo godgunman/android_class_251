@@ -28,8 +28,13 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
 import com.parse.FindCallback;
 import com.parse.Parse;
 import com.parse.ParseException;
@@ -67,7 +72,7 @@ public class MainActivity extends ActionBarActivity {
     private String storeId;
     private String storeName;
 
-
+    private LoginButton loginButton;
     private Bitmap bitmap;
     private Button button;
     private EditText editText;
@@ -75,6 +80,7 @@ public class MainActivity extends ActionBarActivity {
 
     private SharedPreferences sp;
     private SharedPreferences.Editor editor;
+    private CallbackManager callbackManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,6 +101,29 @@ public class MainActivity extends ActionBarActivity {
                 send();
             }
         });
+
+        callbackManager = CallbackManager.Factory.create();
+
+        loginButton = (LoginButton) findViewById(R.id.login_button);
+        loginButton.registerCallback(
+                callbackManager,
+                new FacebookCallback<LoginResult>() {
+                    @Override
+                    public void onSuccess(LoginResult loginResult) {
+                        
+                    }
+
+                    @Override
+                    public void onCancel() {
+
+                    }
+
+                    @Override
+                    public void onError(FacebookException e) {
+
+                    }
+                });
+
 
         editText = (EditText) findViewById(R.id.editText);
         editText.setHint("type something ...");
@@ -247,6 +276,7 @@ public class MainActivity extends ActionBarActivity {
     @Override
     protected void onActivityResult(
             int requestCode, int resultCode, Intent data) {
+        callbackManager.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == REQUEST_CODE_TAKE_PHOTO) {
             if (resultCode == RESULT_OK) {
