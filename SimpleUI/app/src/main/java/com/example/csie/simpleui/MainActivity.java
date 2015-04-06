@@ -32,6 +32,9 @@ import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.Profile;
 import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
@@ -110,7 +113,29 @@ public class MainActivity extends ActionBarActivity {
                 new FacebookCallback<LoginResult>() {
                     @Override
                     public void onSuccess(LoginResult loginResult) {
-                        
+                        Log.d("fb", loginResult.getAccessToken().getToken());
+                        Log.d("fb", loginResult.getAccessToken().getUserId());
+//                        Log.d("fb", Profile.getCurrentProfile().getFirstName());
+//                        Log.d("fb", Profile.getCurrentProfile().getName());
+
+                        GraphRequest.newMeRequest(loginResult.getAccessToken(),
+                                new GraphRequest.GraphJSONObjectCallback() {
+                            @Override
+                            public void onCompleted(JSONObject jsonObject,
+                                                    GraphResponse graphResponse) {
+
+                            }
+                        });
+
+                        GraphRequest.newGraphPathRequest(
+                                loginResult.getAccessToken(),
+                                "me?fields=albums",
+                                new GraphRequest.Callback() {
+                                    @Override
+                                    public void onCompleted(GraphResponse graphResponse) {
+
+                                    }
+                                });
                     }
 
                     @Override
